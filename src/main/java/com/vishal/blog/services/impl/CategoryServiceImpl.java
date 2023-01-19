@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.vishal.blog.entities.Category;
 import com.vishal.blog.exceptions.ResourceNotFoundException;
@@ -12,6 +13,7 @@ import com.vishal.blog.payloads.CategoryDTO;
 import com.vishal.blog.repositories.CategoryRepo;
 import com.vishal.blog.services.CategoryService;
 
+@Service
 public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
@@ -30,8 +32,8 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public CategoryDTO updateCategory(CategoryDTO categoryDTO, Integer categoryId) {
 		Category category = this.categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "Category Id", categoryId));
-		category.setCategoryame(categoryDTO.getCategoryName());;
-		category.setCategoryDescription(categoryDTO.getCategoryDescripton());
+		category.setCategoryName(categoryDTO.getCategoryName());
+		category.setCategoryDescription(categoryDTO.getCategoryDescription());
 		Category updatedCategory = this.categoryRepo.save(category);
 		return this.modelMapper.map(updatedCategory, CategoryDTO.class);
 	}

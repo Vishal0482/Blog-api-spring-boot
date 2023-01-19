@@ -32,7 +32,7 @@ public class CategoryController {
 	}
 	
 	@PutMapping("/{categoryId}")
-	public ResponseEntity<Object> updateCategory(@Valid @RequestBody CategoryDTO categoryDto, Integer categoryId ) {
+	public ResponseEntity<Object> updateCategory(@Valid @RequestBody CategoryDTO categoryDto, @PathVariable Integer categoryId ) {
 		CategoryDTO updatedCategoryDto = this.categoryService.updateCategory(categoryDto, categoryId);
 		return ResponseHandler.generateResponse("Category Updated Successfully", HttpStatus.OK, updatedCategoryDto);
 	}

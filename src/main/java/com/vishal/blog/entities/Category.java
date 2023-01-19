@@ -25,7 +25,7 @@ public class Category {
 	private int categoryId;
 	
 	@Column(name = "name", nullable = false)
-	private String categoryame;
+	private String categoryName;
 	
 	@Column(name = "description", nullable = false)
 	private String categoryDescription;

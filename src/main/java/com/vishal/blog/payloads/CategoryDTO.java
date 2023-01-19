@@ -1,6 +1,7 @@
 package com.vishal.blog.payloads;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,10 +11,10 @@ import lombok.Setter;
 @Setter
 public class CategoryDTO {
 
-	@NotEmpty
 	private int categoryId;
 	@NotEmpty
 	private String categoryName;
 	@NotEmpty
-	private String categoryDescripton;
+	@Size(min = 10, message = "Description length must be longer than 10.")
+	private String categoryDescription;
 }
