@@ -13,7 +13,7 @@ public interface PostService {
 
 	PostDTO getPostById(Integer postId);
 
-	PaginationDataHandler<PostDTO> getAllPost(Integer pageNumber, Integer pageSize);
+	PaginationDataHandler<PostDTO> getAllPost(Integer pageNumber, Integer pageSize, String soryBy, String sortDir);
 	
 	List<PostDTO> getPostByUser(Integer userId);
 	

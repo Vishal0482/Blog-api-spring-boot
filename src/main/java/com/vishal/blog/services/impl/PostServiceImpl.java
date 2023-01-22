@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.vishal.blog.entities.Category;
 import com.vishal.blog.entities.Post;
@@ -76,8 +77,10 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PaginationDataHandler<PostDTO> getAllPost(Integer pageNumber, Integer pageSize) {
-		Pageable pageData = PageRequest.of(pageNumber, pageSize);
+	public PaginationDataHandler<PostDTO> getAllPost(Integer pageNumber, Integer pageSize, String soryBy, String sortDir) {
+		
+		Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(soryBy).descending() : Sort.by(soryBy).ascending();
+		Pageable pageData = PageRequest.of(pageNumber, pageSize, sort);
 		Page<Post> pageList = this.postRepo.findAll(pageData);
 		
 		List<Post> postList = pageList.getContent();
