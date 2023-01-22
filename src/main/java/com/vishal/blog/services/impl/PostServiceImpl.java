@@ -1,18 +1,24 @@
 package com.vishal.blog.services.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
 import com.vishal.blog.entities.Category;
 import com.vishal.blog.entities.Post;
 import com.vishal.blog.entities.User;
 import com.vishal.blog.exceptions.ResourceNotFoundException;
+import com.vishal.blog.payloads.PaginationDataHandler;
 import com.vishal.blog.payloads.PostDTO;
 import com.vishal.blog.repositories.CategoryRepo;
 import com.vishal.blog.repositories.PostRepo;
@@ -53,8 +59,13 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public PostDTO updatePost(PostDTO postDTO, Integer postId) {
-		// TODO Auto-generated method stub
-		return null;
+		Post post = this.postRepo.findById(postId)
+				.orElseThrow(() -> new ResourceNotFoundException("Post", "postId", postId));
+		post.setContent(postDTO.getContent());
+		post.setTitle(postDTO.getTitle());
+		post.setImageUrl(postDTO.getImageUrl());
+		Post updatedPost = this.postRepo.save(post);
+		return this.modelMapper.map(updatedPost, PostDTO.class);
 	}
 
 	@Override
@@ -65,11 +76,24 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostDTO> getAllPost() {
-		List<Post> postList = this.postRepo.findAll();
+	public PaginationDataHandler<PostDTO> getAllPost(Integer pageNumber, Integer pageSize) {
+		Pageable pageData = PageRequest.of(pageNumber, pageSize);
+		Page<Post> pageList = this.postRepo.findAll(pageData);
+		
+		List<Post> postList = pageList.getContent();
 		List<PostDTO> postDtoList = postList.stream().map(post -> this.modelMapper.map(post, PostDTO.class))
 				.collect(Collectors.toList());
-		return postDtoList;
+		
+		PaginationDataHandler<PostDTO> paginationPostData = new PaginationDataHandler<PostDTO>();
+		paginationPostData.setDocs(postDtoList);
+		paginationPostData.setPageNumber(pageList.getNumber());
+		paginationPostData.setPageSize(pageList.getSize());
+		paginationPostData.setTotalPages(pageList.getTotalPages());
+		paginationPostData.setTotalElements(pageList.getTotalElements());
+		paginationPostData.setHasNextPage(pageList.hasNext());
+		paginationPostData.setHasPrevPage(pageList.hasPrevious());
+		
+		return paginationPostData;
 	}
 
 	@Override
@@ -93,15 +117,17 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostDTO> searchPost(String keyword) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<PostDTO> searchPost(String title) {
+		List<Post> postList = this.postRepo.findByTitleContaining(title);
+		List<PostDTO> postDtoList = postList.stream().map(post -> this.modelMapper.map(post, PostDTO.class))
+				.collect(Collectors.toList());
+		return postDtoList;
 	}
 
 	@Override
 	public void deletePost(Integer postId) {
-		// TODO Auto-generated method stub
-
+		Post post = this.postRepo.findById(postId)
+				.orElseThrow(() -> new ResourceNotFoundException("Post", "postId", postId));
+		this.postRepo.delete(post);
 	}
-
 }

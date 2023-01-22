@@ -2,6 +2,7 @@ package com.vishal.blog.services;
 
 import java.util.List;
 
+import com.vishal.blog.payloads.PaginationDataHandler;
 import com.vishal.blog.payloads.PostDTO;
 
 public interface PostService {
@@ -12,7 +13,7 @@ public interface PostService {
 
 	PostDTO getPostById(Integer postId);
 
-	List<PostDTO> getAllPost();
+	PaginationDataHandler<PostDTO> getAllPost(Integer pageNumber, Integer pageSize);
 	
 	List<PostDTO> getPostByUser(Integer userId);
 	
@@ -21,5 +22,4 @@ public interface PostService {
 	List<PostDTO> searchPost(String keyword);
 
 	void deletePost(Integer postId);
-
 }
