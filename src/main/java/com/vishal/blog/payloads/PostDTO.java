@@ -1,6 +1,8 @@
 package com.vishal.blog.payloads;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -21,4 +23,6 @@ public class PostDTO {
 	private Date createdAt;
 	private CategoryDTO category;
 	private UserDTO user;
+	
+	private Set<CommentDTO> comments = new HashSet<>();
 }
