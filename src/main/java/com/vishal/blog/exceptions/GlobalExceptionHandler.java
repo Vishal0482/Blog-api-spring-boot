@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +20,12 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<Object> resourceNotFoundExeption(ResourceNotFoundException ex) {
 		String message = ex.getMessage();
 		return ResponseHandler.generateResponse(message, HttpStatus.NOT_FOUND, null);
+	}
+	
+	@ExceptionHandler(InternalAuthenticationServiceException.class)
+	public ResponseEntity<Object> internalAuthenticationServiceException(InternalAuthenticationServiceException ex) {
+		String message = ex.getMessage();
+		return ResponseHandler.generateResponse(message, HttpStatus.UNAUTHORIZED, null);
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
