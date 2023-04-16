@@ -38,4 +38,12 @@ public class GlobalExceptionHandler {
 		});
 		return ResponseHandler.generateResponse("Invalid Data", HttpStatus.BAD_REQUEST, map);
 	}
+	
+	@ExceptionHandler(ApiException.class)
+	public ResponseEntity<Object> handleApiException(ApiException ex) {
+		String message = ex.getMessage();
+//		ApiResponse apiResponse = new ApiResponse(message, true);
+//		return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.BAD_REQUEST);
+		return ResponseHandler.generateResponse(message, HttpStatus.BAD_REQUEST, null);
+	}
 }
